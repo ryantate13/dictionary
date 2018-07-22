@@ -2,7 +2,7 @@ const fs = require('fs'),
 	app = require('express')(),
 	dict = ['a','b','c','d','e','f','g','h','i','j','k','l','m','misc','n','o','p','q','r','s','t','u','v','w','x','y','z']
 		.reduce((a,letter) => ({...a, [letter]: require(`../wordset-dictionary/data/${letter}.json`)}), {}),
-	readme = {};
+	readme = require('./markdown_to_html')(fs.readFileSync(__dirname + '/../README.md', 'utf8')));
 
 function format_req(req, _, next){
 	const word = req.params.word.toLowerCase(),
@@ -15,7 +15,7 @@ function format_req(req, _, next){
 	return next();
 }
 
-app.get('/', (_,res) => res.send(require('./markdown_to_html')(fs.readFileSync(__dirname + '/../README.md', 'utf8'))));
+app.get('/', (_,res) => res.send(readme);
 
 app.get('/:word', format_req, (req, res) => {
 	const {letter, word} = req.params;
