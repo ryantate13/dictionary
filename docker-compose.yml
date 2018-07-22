@@ -1,0 +1,10 @@
+{
+  "version": "2",
+  "services": {
+    "api": {
+      "build": ".",
+      "ports": ["3003:3003"],
+      "volumes": ["./src:/app/src"]
+    }
+  }
+}
