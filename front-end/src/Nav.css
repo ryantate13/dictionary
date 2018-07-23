@@ -1,0 +1,137 @@
+#mobile_nav{
+}
+
+#mobile_nav #logo {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#mobile_nav #logo h1 {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    color: white;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 1rem;
+}
+
+#mobile_nav #logo h2 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+#mobile_nav #logo button {
+    height: 50px;
+    width: 50px;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    font-size: 1.75rem;
+}
+
+#side_nav{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    height: 100%;
+    padding-bottom: 100px;
+}
+
+#side_nav #logo {
+    display: flex;
+    flex-direction: column;
+}
+
+#side_nav #logo h1 {
+    width: 150px;
+    height: 150px;
+    font-size: 5rem;
+    color: white;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 1rem;
+    cursor: pointer;
+}
+
+#side_nav #logo h2 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+}
+
+ul#menu {
+    width: 100%;
+    padding: 0 10%;
+    list-style-type: none;
+    transition: all 300ms ease;
+}
+
+#mobile_nav ul#menu.closed {
+    height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#mobile_nav ul#menu.open {
+    height: auto;
+    opacity: 1;
+}
+
+#mobile_nav ul#menu.closed li {
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+ul#menu li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-top: 1px solid black;
+    transition: all 300ms ease;
+    cursor: pointer;
+}
+
+ul#menu li:hover {
+    background: black;
+    color: white;
+}
+
+ul#menu li:last-child {
+    border-bottom: 1px solid black;
+}
+
+ul#menu li i {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: black;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+    transition: all 300ms ease;
+    font-style: normal;
+}
+
+ul#menu li:hover i {
+    background: white;
+    color: black;
+}

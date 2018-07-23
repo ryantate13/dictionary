@@ -1,0 +1,23 @@
+#search {
+    padding: 5rem 0;
+}
+
+#search.mobile {
+    padding: 0;
+}
+
+#search.mobile h1 {
+    margin: 0 0 1rem 0;
+}
+
+#search input[type="search"] {
+    padding: 1rem;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+#search #results ol li {
+    margin-bottom: 1rem;
+}
