@@ -85,6 +85,10 @@ class App extends Component {
         document.title = this.routes[this.state.route].name;
     }
 
+    schedule(event){
+        setTimeout(() => this.dispatch(event));
+    }
+
     update(event, state){
         switch(event.type){
             case 'window_resize':
@@ -101,7 +105,8 @@ class App extends Component {
                 state.letters = Object.keys(event.retrieved);
                 if(state.letters.length < 26)
                     requestAnimationFrame(() => this.props.dict.get_retrieved()
-                        .then(retrieved => this.dispatch({type: 'progress', retrieved})));
+                        .then(retrieved => this.dispatch({type: 'progress', retrieved})))
+                        .catch(console.error);
                 else
                     state.loading = false;
                 break;
@@ -128,10 +133,12 @@ class App extends Component {
                 const term = localStorage.search_term = state.search_term = event.term;
                 if(term){
                     this.props.dict.get_word(term)
-                        .then(result => this.dispatch({type: 'search_result', result}));
+                        .then(result => this.dispatch({type: 'search_result', result}))
+                        .catch(console.error);
                     if(term.length >= 2)
                         this.props.dict.get_matches(term)
-                            .then(suggestions => this.dispatch({type: 'search_suggestions', suggestions}));
+                            .then(suggestions => this.dispatch({type: 'search_suggestions', suggestions}))
+                            .catch(console.error);
                 }
                 else{
                     state.search_suggestions = [];
@@ -145,11 +152,12 @@ class App extends Component {
                 state.search_suggestions = event.suggestions;
                 break;
             case 'browse_letter':
-                localStorage.browse_letter = state.browse_letter = event.letter;
+                localStorage.browse_letter = state.browse_letter = event.letter.toLowerCase();
                 state.browse_words = [];
                 state.browse_result = null;
                 this.props.dict.get_matches(event.letter, null)
-                    .then(words => this.dispatch({type: 'browse_words', words}));
+                    .then(words => this.dispatch({type: 'browse_words', words}))
+                    .catch(console.error);
                 break;
             case 'browse_words':
                 state.browse_words = event.words;
@@ -157,16 +165,18 @@ class App extends Component {
             case 'browse_word':
                 localStorage.browse_word = state.browse_word = event.word;
                 this.props.dict.get_word(event.word)
-                    .then(word => this.dispatch({type: 'browse_result', word}));
+                    .then(word => this.dispatch({type: 'browse_result', word}))
+                    .catch(console.error);
                 break;
             case 'browse_result':
                 state.browse_result = event.word;
                 break;
             case 'browse_synonym':
-                setTimeout(() => {
-                    this.dispatch({type: 'browse_letter', letter: event.synonym[0]});
-                    this.dispatch({type: 'browse_word', word: event.synonym});
-                });
+                const word = event.synonym,
+                    letter = word[0].toLowerCase();
+                if(state.browse_letter !== letter)
+                    this.schedule({type: 'browse_letter', letter});
+                this.schedule({type: 'browse_word', word});
                 break;
             default:
                 console.log(event);
