@@ -17,7 +17,7 @@ export async function init(){
 
     dict.forEach(letter => {
         if(!retrieved[letter])
-            fetch(`/dictionary/${letter}.json`)
+            fetch(`${process.env.PUBLIC_URL}/dictionary/${letter}.json`)
                 .then(r => r.json())
                 .then(async words => {
                     const word_definitions = Object.values(words);
@@ -37,10 +37,12 @@ export async function get_retrieved(){
 }
 
 export async function get_matches(prefix, limit = 26){
-    const matches = await db.words.where('word').startsWithIgnoreCase(prefix),
+    const matches = limit ?
+            await db.words.where('word').startsWithIgnoreCase(prefix).limit(limit)
+            :
+            await db.words.where('word').startsWithIgnoreCase(prefix),
         arr = await matches.toArray();
-    const words = arr.map(m => m.word);
-    return limit ? words.slice(0,limit) : words;
+    return arr.map(m => m.word);
 }
 
 export async function get_word(word) {
