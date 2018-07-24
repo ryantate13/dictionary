@@ -17,6 +17,7 @@ export default function Browse(props){
             {
                 props.browse_words.map(word => <div
                     key={word}
+                    id={word.toLowerCase().replace(/\s/g, '_')}
                     className={`browse-word ${word === props.browse_word ? 'active' : ''}`}
                     onClick={() => props.dispatch({type: 'browse_word', word})}
                 >

@@ -156,7 +156,11 @@ class App extends Component {
                 state.browse_words = [];
                 state.browse_result = null;
                 this.props.dict.get_matches(event.letter, null)
-                    .then(words => this.dispatch({type: 'browse_words', words}))
+                    .then(words => {
+                        this.dispatch({type: 'browse_words', words});
+                        if(event.then_select)
+                            this.schedule({type: 'browse_word', word: event.then_select, scroll_to: event.then_select});
+                    })
                     .catch(console.error);
                 break;
             case 'browse_words':
@@ -165,18 +169,27 @@ class App extends Component {
             case 'browse_word':
                 localStorage.browse_word = state.browse_word = event.word;
                 this.props.dict.get_word(event.word)
-                    .then(word => this.dispatch({type: 'browse_result', word}))
+                    .then(word => this.dispatch({type: 'browse_result', word, scroll_to: event.scroll_to}))
                     .catch(console.error);
                 break;
             case 'browse_result':
                 state.browse_result = event.word;
+                if(event.scroll_to){
+                    const id = event.word.word.toLowerCase().replace(/\s/g, '_'),
+                        word_el = document.getElementById(id);
+                    if(word_el)
+                        document.getElementById('browse-words').scrollTop = word_el.offsetTop;
+                    else
+                        console.error('word id not found', id);
+                }
                 break;
             case 'browse_synonym':
                 const word = event.synonym,
                     letter = word[0].toLowerCase();
                 if(state.browse_letter !== letter)
-                    this.schedule({type: 'browse_letter', letter});
-                this.schedule({type: 'browse_word', word});
+                    this.schedule({type: 'browse_letter', letter, then_select: word});
+                else
+                    this.schedule({type: 'browse_word', word, scroll_to: word});
                 break;
             default:
                 console.log(event);
