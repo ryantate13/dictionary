@@ -1,4 +1,5 @@
-const fs = require('fs'),
+const port = 3003,
+	fs = require('fs'),
 	app = require('express')(),
 	dict = ['a','b','c','d','e','f','g','h','i','j','k','l','m','misc','n','o','p','q','r','s','t','u','v','w','x','y','z']
 		.reduce((a,letter) => ({...a, [letter]: require(`../wordset-dictionary/data/${letter}.json`)}), {}),
@@ -34,4 +35,4 @@ app.get('/search/:word', format_req, (req, res) => {
 	);
 });
 
-app.listen(3003, () => console.log('running'));
+app.listen(port, () => console.log(`http://localhost:${port}/`));
