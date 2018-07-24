@@ -23,7 +23,7 @@ export default function Result(props){
                                                 href={`/search/${s}`}
                                                 onClick={e => {
                                                     e.preventDefault();
-                                                    props.onClick(s)
+                                                    props.synonymClick(s)
                                                 }}
                                             >
                                                 {s}

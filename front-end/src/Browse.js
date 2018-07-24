@@ -32,7 +32,7 @@ export default function Browse(props){
                     <h1>{props.browse_result.word}</h1>
                     <Result
                         word={props.browse_result}
-                        onClick={synonym => props.dispatch({type: 'browse_synonym', synonym})}
+                        synonymClick={synonym => props.dispatch({type: 'browse_synonym', synonym})}
                     />
                 </div>
                 :
