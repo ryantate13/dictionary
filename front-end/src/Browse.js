@@ -29,7 +29,6 @@ export default function Browse(props){
             props.browse_result
                 ?
                 <div id="result">
-                    <h1>{props.browse_result.word}</h1>
                     <Result
                         word={props.browse_result}
                         synonymClick={synonym => props.dispatch({type: 'browse_synonym', synonym})}

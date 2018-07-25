@@ -12,13 +12,18 @@ export default function Search(props){
                 <Loading progress={props.letters.length / 26} />
                 :
                 <div>
-                    <input
-                        list={props.search_suggestions.length ? 'search-suggestions' : null}
-                        type="search"
-                        value={props.search_term}
-                        onChange={e => props.dispatch({type: 'search_term', term: e.target.value})}
-                        placeholder={'Enter a search term...'}
-                    />
+                    <form onSubmit={e => {
+                        e.preventDefault();
+                        props.dispatch({type: 'search_term', term: props.search_term})
+                    }}>
+                        <input
+                            list={props.search_suggestions.length ? 'search-suggestions' : null}
+                            type="search"
+                            value={props.search_term}
+                            onChange={e => props.dispatch({type: 'search_term', term: e.target.value})}
+                            placeholder={'Enter a search term...'}
+                        />
+                    </form>
                     {
                         props.search_suggestions.length
                             ?

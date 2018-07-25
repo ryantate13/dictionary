@@ -80,9 +80,16 @@ class App extends Component {
         this.props.dict.get_retrieved()
             .then(retrieved => this.dispatch({type: 'progress', retrieved}))
             .catch(console.error);
-        setTimeout(() => this.dispatch({type: 'search_term', term: this.state.search_term}));
-        setTimeout(() => this.dispatch({type: 'browse_letter', letter: this.state.browse_letter}));
+
+        this.schedule({type: 'search_term', term: this.state.search_term});
+        this.schedule({type: 'browse_letter', letter: this.state.browse_letter});
+
         document.title = this.routes[this.state.route].name;
+
+        Object.keys(this.routes).forEach(route => {
+            if(this.routes[route].path === document.location.pathname.replace(process.env.PUBLIC_URL, ''))
+                this.schedule({type: 'request_route', route});
+        });
     }
 
     schedule(event){
@@ -105,8 +112,8 @@ class App extends Component {
                 state.letters = Object.keys(event.retrieved);
                 if(state.letters.length < 26)
                     requestAnimationFrame(() => this.props.dict.get_retrieved()
-                        .then(retrieved => this.dispatch({type: 'progress', retrieved})))
-                        .catch(console.error);
+                        .then(retrieved => this.dispatch({type: 'progress', retrieved}))
+                        .catch(console.error));
                 else
                     state.loading = false;
                 break;

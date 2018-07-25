@@ -6,6 +6,7 @@ function capitalize(word){
 
 export default function Result(props){
     return <div id={'results'}>
+        <h1>{props.word.word}</h1>
         <h3>Definitions:</h3>
         <ol>
             {
