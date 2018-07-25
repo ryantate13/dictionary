@@ -3,6 +3,7 @@
   "version": "1.0",
   "private": true,
   "dependencies": {
+    "datalist-polyfill": "^1.20.1",
     "dexie": "^2.0.4",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
