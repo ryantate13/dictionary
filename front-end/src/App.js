@@ -139,13 +139,13 @@ class App extends Component {
                     document.title = this.routes[matching_route].name;
                     state.route = matching_route;
                     localStorage.route = state.route;
-                    window.history.pushState(
-                        {
-                            route: state.route
-                        },
-                        this.routes[matching_route].name,
-                        process.env.PUBLIC_URL + this.routes[matching_route].path
-                    );
+                    // window.history.pushState(
+                    //     {
+                    //         route: state.route
+                    //     },
+                    //     this.routes[matching_route].name,
+                    //     process.env.PUBLIC_URL + this.routes[matching_route].path
+                    // );
                 }
                 else
                     console.error({error: 'invalid route', ...event});
