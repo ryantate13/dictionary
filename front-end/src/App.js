@@ -76,19 +76,26 @@ class App extends Component {
     }
 
     componentDidMount(){
-        this.props.dict.init().catch(console.error);
-        this.props.dict.get_retrieved()
-            .then(retrieved => this.dispatch({type: 'progress', retrieved}))
-            .catch(console.error);
 
-        this.schedule({type: 'search_term', term: this.state.search_term});
-        this.schedule({type: 'browse_letter', letter: this.state.browse_letter});
+        const setup = () => {
+            this.props.dict.init().catch(console.error);
+            this.props.dict.get_retrieved()
+                .then(retrieved => this.dispatch({type: 'progress', retrieved}))
+                .catch(console.error);
+            this.dispatch({type: 'search_term', term: this.state.search_term});
+            this.dispatch({type: 'browse_letter', letter: this.state.browse_letter});
+            document.title = this.routes[this.state.route].name;
 
-        document.title = this.routes[this.state.route].name;
-
-        Object.keys(this.routes).forEach(route => {
-            if(this.routes[route].path === document.location.pathname.replace(process.env.PUBLIC_URL, ''))
-                this.schedule({type: 'request_route', route});
+            Object.keys(this.routes).forEach(route => {
+                if(this.routes[route].path === document.location.pathname.replace(process.env.PUBLIC_URL, ''))
+                    this.schedule({type: 'request_route', route});
+            });
+        };
+        this.props.dict.get_word('dictionary').then(def => {
+            if(def.search_term)
+                setup();
+            else
+                this.props.dict.invalidate_cache().then(setup);
         });
     }
 

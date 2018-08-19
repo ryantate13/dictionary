@@ -1,18 +1,17 @@
 import Dexie from 'dexie';
 
-const db = new Dexie('dictionary');
-
-db.version(1).stores({
-    words: '&word',
-    retrieved: '&id,status'
-});
-
-export async function init(){
-    const dict = [
+const db = new Dexie('dictionary'),
+    dict = [
         'a','b','c','d','e','f','g','h','i','j','k','l','m',
         'n','o','p','q','r','s','t','u','v','w','x','y','z'
     ];
 
+db.version(1).stores({
+    words: '&search_term',
+    retrieved: '&id,status'
+});
+
+export async function init(){
     const retrieved = await get_retrieved();
 
     dict.forEach(letter => {
@@ -20,7 +19,9 @@ export async function init(){
             fetch(`${process.env.PUBLIC_URL}/dictionary/${letter}.json`)
                 .then(r => r.json())
                 .then(async words => {
-                    const word_definitions = Object.values(words);
+                    const word_definitions = Object.values(words).map(
+                        word => ({...word, search_term: word.word.toLowerCase()})
+                    );
                     db.transaction('rw', db.words, db.retrieved, async () => {
                         db.words.bulkPut(word_definitions);
                         db.retrieved.put({id: letter, status: true});
@@ -38,13 +39,17 @@ export async function get_retrieved(){
 
 export async function get_matches(prefix, limit = 26){
     const matches = limit ?
-            await db.words.where('word').startsWithIgnoreCase(prefix).limit(limit)
+            await await db.words.where('search_term').startsWith(prefix).limit(limit)
             :
-            await db.words.where('word').startsWithIgnoreCase(prefix),
+            await db.words.where('search_term').startsWith(prefix),
         arr = await matches.toArray();
     return arr.map(m => m.word);
 }
 
 export async function get_word(word) {
     return await db.words.get(word);
+}
+
+export async function invalidate_cache(){
+    db.retrieved.where('id').anyOf(...dict).delete();
 }
