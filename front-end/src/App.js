@@ -92,7 +92,7 @@ class App extends Component {
             });
         };
         this.props.dict.get_word('dictionary').then(def => {
-            if(def.search_term)
+            if(def && def.search_term)
                 setup();
             else
                 this.props.dict.invalidate_cache().then(setup);
@@ -195,7 +195,7 @@ class App extends Component {
                 break;
             case 'browse_result':
                 state.browse_result = event.word;
-                if(event.scroll_to){
+                if(event.scroll_to && !state.is_mobile){
                     const id = event.word.word.toLowerCase().replace(/\s/g, '_'),
                         word_el = document.getElementById(id);
                     if(word_el)

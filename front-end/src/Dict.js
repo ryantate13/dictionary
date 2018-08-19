@@ -38,18 +38,20 @@ export async function get_retrieved(){
 }
 
 export async function get_matches(prefix, limit = 26){
-    const matches = limit ?
-            await await db.words.where('search_term').startsWith(prefix).limit(limit)
+    const  get_matches = () => db.words.where('search_term').startsWith(prefix.toLowerCase()),
+        matches = limit ?
+            await get_matches().limit(limit)
             :
-            await db.words.where('search_term').startsWith(prefix),
+            await get_matches(),
         arr = await matches.toArray();
     return arr.map(m => m.word);
 }
 
 export async function get_word(word) {
-    return await db.words.get(word);
+    return await db.words.get(word.toLowerCase());
 }
 
 export async function invalidate_cache(){
-    db.retrieved.where('id').anyOf(...dict).delete();
+    await db.retrieved.where('id').anyOf(...dict).delete();
+    await db.words.where('search_term').startsWithAnyOf(...dict).delete();
 }
